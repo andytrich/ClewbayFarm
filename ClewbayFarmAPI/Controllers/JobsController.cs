@@ -16,7 +16,7 @@ namespace ClewbayFarmAPI.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetJobs")]
         public async Task<ActionResult<JobListDto>> GetJobs(int year, int week)
         {
             // Calculate start and end dates of the given week

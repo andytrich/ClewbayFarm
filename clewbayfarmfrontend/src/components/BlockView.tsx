@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getCropsInBlock } from "../services/api";
-import { Block } from "../types/Block";
+
+interface BlockCropDetails {
+    bedId: number;
+    cropType: string;
+    cropVariety: string;
+    plantingDate: string; // ISO string from API
+    removalDate: string; // ISO string from API
+    plantingWeek: number;
+    removalWeek: number;
+}
 
 interface BlockViewProps {
     blockId: number;
@@ -8,12 +17,12 @@ interface BlockViewProps {
 }
 
 const BlockView: React.FC<BlockViewProps> = ({ blockId, week }) => {
-    const [block, setBlock] = useState<Block | null>(null);
+    const [crops, setCrops] = useState<BlockCropDetails[]>([]);
 
     useEffect(() => {
         const fetchBlockData = async () => {
             const data = await getCropsInBlock(blockId, week);
-            setBlock(data);
+            setCrops(data);
         };
 
         fetchBlockData();
@@ -21,12 +30,20 @@ const BlockView: React.FC<BlockViewProps> = ({ blockId, week }) => {
 
     return (
         <div>
-            <h2>Block {block?.name} ({block?.type})</h2>
-            {block?.beds.map((bed) => (
-                <div key={bed.bedId} onClick={() => alert(`Crop: ${bed.cropType} - ${bed.cropVariety}`)}>
-                    <p>Bed {bed.bedId}: {bed.cropType} ({bed.cropVariety})</p>
-                </div>
-            ))}
+            <h2>Block Crops for Week {week}</h2>
+            {crops.length === 0 ? (
+                <p>No crops found for this block in the given week.</p>
+            ) : (
+                <ul>
+                    {crops.map((crop) => (
+                        <li key={crop.bedId}>
+                            <strong>Bed {crop.bedId}:</strong> {crop.cropType} ({crop.cropVariety}) <br />
+                            Planting Date: {new Date(crop.plantingDate).toLocaleDateString()} <br />
+                            Removal Date: {crop.removalDate ? new Date(crop.removalDate).toLocaleDateString() : "N/A"}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
