@@ -31,7 +31,7 @@ namespace ClewbayFarmAPI.Controllers
                     mt.RemovalDate >= startDate && mt.RemovalDate <= endDate)    // To be removed
                 .Select(mt => new
                 {
-                    Action = mt.PlantingDate >= startDate && mt.PlantingDate <= endDate ? "Plant" : "Remove",
+                    Action = mt.PlantingDate >= startDate && mt.PlantingDate <= endDate ? "Plant in polytunnel " + mt.TrayType.Name : "Remove from polytunnel",
                     Crop = mt.Crop.Type + " - " + mt.Crop.Variety,
                     Date = mt.PlantingDate >= startDate && mt.PlantingDate <= endDate ? mt.PlantingDate : mt.RemovalDate
                 })

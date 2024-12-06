@@ -1,49 +1,24 @@
-import React, { useState } from "react";
-import JobsList from "./components/JobsList";
-import GapsList from "./components/GapsList";
-import BlockView from "./components/BlockView";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/NavBar";
+import BlocksPage from "./pages/BlocksPage";
+import JobsPage from "./pages/JobsPage";
+import GapsPage from "./pages/GapsPage";
 
 const App: React.FC = () => {
-    const [week, setWeek] = useState<number>(10); // Default week
-    const [year, setYear] = useState<number>(2024); // Default year
-    const [blockId, setBlockId] = useState<number>(1); // Default block
-
     return (
-        <div>
-            <header>
-                <h1>Farm Management System</h1>
-                <div>
-                    <label>
-                        Year:
-                        <input
-                            type="number"
-                            value={year}
-                            onChange={(e) => setYear(Number(e.target.value))}
-                        />
-                    </label>
-                    <label>
-                        Week:
-                        <input
-                            type="number"
-                            value={week}
-                            onChange={(e) => setWeek(Number(e.target.value))}
-                        />
-                    </label>
+        <Router>
+            <div className="d-flex">
+                <Navbar />
+                <div className="flex-grow-1 p-3">
+                    <Routes>
+                        <Route path="/blocks" element={<BlocksPage />} />
+                        <Route path="/jobs" element={<JobsPage />} />
+                        <Route path="/gaps" element={<GapsPage />} />
+                    </Routes>
                 </div>
-            </header>
-
-            <main>
-                <section>
-                    <JobsList week={week} year={year} />
-                </section>
-                <section>
-                    <GapsList blockId={blockId} week={week} />
-                </section>
-                <section>
-                    <BlockView blockId={blockId} week={week} />
-                </section>
-            </main>
-        </div>
+            </div>
+        </Router>
     );
 };
 

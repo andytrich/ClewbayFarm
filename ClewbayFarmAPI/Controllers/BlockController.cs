@@ -15,7 +15,22 @@ namespace ClewbayFarmAPI.Controllers
         {
             _context = context;
         }
+        [HttpGet("GetAllBlocks")]
+        public async Task<ActionResult<IEnumerable<BlockDto>>> GetAllBlocks()
+        {
+            // Query all blocks and include their type
+            var blocks = await _context.Blocks
+                .Include(b => b.BlockType)
+                .Select(b => new BlockDto
+                {
+                    BlockId = b.BlockId,
+                    Name = b.Name,
+                    Type = b.BlockType.TypeName
+                })
+                .ToListAsync();
 
+            return Ok(blocks);
+        }
         [HttpGet("{blockId}/GetCropsInBlock")]
         public async Task<ActionResult<IEnumerable<BlockCropDetailsDto>>> GetCropsInBlock(
 int blockId,
@@ -51,7 +66,7 @@ int blockId,
             return Ok(bedCropDetails);
         }
         [HttpGet("{blockId}/GetGapsForBlock")]
-        public async Task<ActionResult<IEnumerable<GapDto>>> GetGapsForBlock(int blockId, [FromQuery] int week)
+        public async Task<ActionResult<IEnumerable<GapDto>>> GetGapsForBlock(int blockId)
         {
             // Fetch all beds for the given block
             var beds = await _context.Beds
@@ -74,7 +89,7 @@ int blockId,
                     .OrderBy(bc => bc.PlantingWeek)
                     .ToListAsync();
 
-                int currentWeek = week;
+                int currentWeek = 1;
 
                 foreach (var crop in cropsInBed)
                 {

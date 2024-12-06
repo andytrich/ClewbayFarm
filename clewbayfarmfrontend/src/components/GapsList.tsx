@@ -11,19 +11,19 @@ const GapsList: React.FC<GapsListProps> = ({ blockId, week }) => {
 
     useEffect(() => {
         const fetchGaps = async () => {
-            const data = await getGapsForBlock(blockId, week);
+            const data = await getGapsForBlock(blockId);
             setGaps(data);
         };
 
         fetchGaps();
-    }, [blockId, week]);
+    }, [blockId]);
 
     return (
         <div>
             <h2>Gaps for Block {blockId}, Week {week}</h2>
             <ul>
                 {gaps.map((gap, index) => (
-                    <li key={index}>From {gap.startWeek} to {gap.endWeek}</li>
+                    <li key={index}>From {gap.startWeek} to {gap.endWeek} : Bed {gap.bedId}</li>
                 ))}
             </ul>
         </div>
