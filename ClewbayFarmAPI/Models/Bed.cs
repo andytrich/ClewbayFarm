@@ -10,6 +10,9 @@ public partial class Bed
     public int BlockId { get; set; }
 
     public int Position { get; set; }
+    public double Length { get; set; }
+
+    public double Width { get; set; }
 
     public virtual ICollection<BedCrop> BedCrops { get; set; } = new List<BedCrop>();
 

@@ -7,11 +7,14 @@ public partial class Crop
 {
     public int CropId { get; set; }
 
-    public string Type { get; set; } = null!;
+    public int CropTypeId { get; set; } // Foreign key reference to CropTypes table
 
     public string Variety { get; set; } = null!;
 
     public bool IsDirectSow { get; set; }
+
+    // Navigation properties
+    public virtual CropType CropType { get; set; } = null!;
 
     public virtual ICollection<BedCrop> BedCrops { get; set; } = new List<BedCrop>();
 

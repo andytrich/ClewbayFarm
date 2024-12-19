@@ -54,7 +54,7 @@ int blockId,
                 .Select(bc => new BlockCropDetailsDto
                 {
                     BedId = bc.BedId,
-                    CropType = bc.Crop.Type,
+                    CropType = bc.Crop.CropType.TypeName,
                     CropVariety = bc.Crop.Variety,
                     PlantingDate = bc.PlantingDate.ToDateTime(TimeOnly.MinValue),
                     RemovalDate = bc.RemovalDate.ToDateTime(TimeOnly.MinValue),

@@ -25,7 +25,8 @@ public partial class ClewbayFarmContext : DbContext
 
     public virtual DbSet<Cover> Covers { get; set; }
 
-    public virtual DbSet<Crop> Crops { get; set; }
+    public virtual DbSet<Crop> Crops { get; set; } 
+    public virtual DbSet<CropType> CropTypes { get; set; }
 
     public virtual DbSet<CropBedAttribute> CropBedAttributes { get; set; }
 
@@ -99,10 +100,36 @@ public partial class ClewbayFarmContext : DbContext
 
         modelBuilder.Entity<Crop>(entity =>
         {
-            entity.HasKey(e => e.CropId);//.HasName("PK__Crops__92356115F9926D37");
+            entity.HasKey(e => e.CropId); // Primary Key
 
-            entity.Property(e => e.Type).HasMaxLength(100);
-            entity.Property(e => e.Variety).HasMaxLength(100);
+            entity.Property(e => e.Variety)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(e => e.IsDirectSow)
+                .IsRequired();
+
+            // Define foreign key relationship
+            entity.HasOne(e => e.CropType)
+                .WithMany(ct => ct.Crops)
+                .HasForeignKey(e => e.CropTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<CropType>(entity =>
+        {
+            entity.HasKey(e => e.CropTypeId); // Primary Key
+
+            entity.Property(e => e.TypeName)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(e => e.Family)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.HasIndex(e => e.TypeName)
+                .IsUnique();
         });
 
         modelBuilder.Entity<CropBedAttribute>(entity =>

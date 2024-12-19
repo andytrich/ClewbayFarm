@@ -119,6 +119,8 @@ CREATE TABLE [dbo].[Beds](
 	[BedId] [int] IDENTITY(1,1) NOT NULL,
 	[BlockId] [int] NOT NULL,
 	[Position] [int] NOT NULL,
+	[Length] [float] NOT NULL,
+	[Width] [float] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[BedId] ASC
@@ -134,8 +136,6 @@ CREATE TABLE [dbo].[Blocks](
 	[BlockId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,
 	[BlockTypeId] [int] NOT NULL,
-	[Length] [float] NOT NULL,
-	[Width] [float] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[BlockId] ASC
@@ -212,21 +212,28 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE CropTypes (
+    CropTypeId INT PRIMARY KEY IDENTITY(1,1), 
+    Family NVARCHAR(100) NOT NULL CHECK (Family IN ('Allium', 'Apiaceae', 'Asteraceae', 'Solanaceae', 'Brassicaceae', 'Cucurbitaceae', 'Fabaceae')),
+    UNIQUE (Family) -- Ensure unique crop type names
+);
 /****** Object:  Table [dbo].[Crops]    Script Date: 05/12/2024 15:58:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Crops](
-	[CropId] [int] IDENTITY(1,1) NOT NULL,
-	[Type] [nvarchar](100) NOT NULL,
-	[Variety] [nvarchar](100) NOT NULL,
-	[IsDirectSow] [bit] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[CropId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+CREATE TABLE Crops (
+    CropId INT PRIMARY KEY IDENTITY(1,1),
+    CropTypeId INT NOT NULL, -- Foreign Key to CropTypes
+    Variety NVARCHAR(100) NOT NULL,
+    IsDirectSow BIT NOT NULL,
+    -- Foreign Key Constraint
+    FOREIGN KEY (CropTypeId) REFERENCES CropTypes (CropTypeId) ON DELETE CASCADE
+);
 GO
 /****** Object:  Table [dbo].[ModuleTrays]    Script Date: 05/12/2024 15:58:04 ******/
 SET ANSI_NULLS ON

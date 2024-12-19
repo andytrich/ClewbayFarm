@@ -33,14 +33,21 @@ namespace ClewbayFarmAPI.Controllers
 
             return crop;
         }
-        // Create a new crop
-        [HttpPost]
         public async Task<ActionResult<Crop>> CreateCrop(CropDto cropDto)
         {
+            // Find the corresponding CropType
+            var cropType = await _context.CropTypes
+                .FirstOrDefaultAsync(ct => ct.TypeName == cropDto.Type);
+
+            if (cropType == null)
+            {
+                return BadRequest($"Crop type '{cropDto.Type}' not found.");
+            }
+
             // Map the DTO to the Crop entity
             var crop = new Crop
             {
-                Type = cropDto.Type,
+                CropTypeId = cropType.CropTypeId,
                 Variety = cropDto.Variety,
                 IsDirectSow = cropDto.IsDirectSow
             };
@@ -52,6 +59,7 @@ namespace ClewbayFarmAPI.Controllers
             // Return the created crop
             return CreatedAtAction(nameof(GetCrop), new { id = crop.CropId }, crop);
         }
+
 
     }
 }

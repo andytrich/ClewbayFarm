@@ -32,7 +32,7 @@ namespace ClewbayFarmAPI.Controllers
                 .Select(mt => new
                 {
                     Action = mt.PlantingDate >= startDate && mt.PlantingDate <= endDate ? "Plant in polytunnel " + mt.TrayType.Name : "Remove from polytunnel",
-                    Crop = mt.Crop.Type + " - " + mt.Crop.Variety,
+                    Crop = mt.Crop.CropType.TypeName + " - " + mt.Crop.Variety,
                     Date = mt.PlantingDate >= startDate && mt.PlantingDate <= endDate ? mt.PlantingDate : mt.RemovalDate
                 })
                 .ToListAsync();
@@ -44,7 +44,7 @@ namespace ClewbayFarmAPI.Controllers
                 .Select(bc => new
                 {
                     Action = "Plant into bed",
-                    Crop = bc.Crop.Type + " - " + bc.Crop.Variety,
+                    Crop = bc.Crop.CropType.TypeName + " - " + bc.Crop.Variety,
                     Bed = bc.BedId,
                     Date = bc.PlantingDate
                 })
@@ -57,7 +57,7 @@ namespace ClewbayFarmAPI.Controllers
                 .Select(bc => new
                 {
                     Action = "Harvest/Remove",
-                    Crop = bc.Crop.Type + " - " + bc.Crop.Variety,
+                    Crop = bc.Crop.CropType.TypeName + " - " + bc.Crop.Variety,
                     Bed = bc.BedId,
                     Date = bc.RemovalDate
                 })
@@ -74,7 +74,7 @@ namespace ClewbayFarmAPI.Controllers
                     Action = cover.StartWeek == week ? "Add Cover" :
                              cover.EndWeek == week ? "Remove Cover" : "Maintain Cover",
                     CoverType = cover.CoverType,
-                    Crop = bc.Crop.Type + " - " + bc.Crop.Variety,
+                    Crop = bc.Crop.CropType.TypeName + " - " + bc.Crop.Variety,
                     Bed = bc.BedId,
                     Week = week
                 }))
