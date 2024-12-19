@@ -99,23 +99,23 @@ SET @FamilyFabaceaeTypeId = (SELECT CropTypeId FROM CropTypes WHERE Family = 'Fa
 
 
 --Add crop details
-DECLARE @NewCropId INT;
+DECLARE @SpringOnionCropId INT;
 
 -- Insert into Crops and retrieve the newly inserted ID
 INSERT INTO Crops (CropTypeId, Variety, IsDirectSow)
 VALUES (
     @FamilyAlliumTypeId,
-    'Ischikrona', 
+    'Spring Onion, White Lisbon', 
     0 -- Not Direct Sow
 );
 
-SET @NewCropId = SCOPE_IDENTITY();
+SET @SpringOnionCropId = SCOPE_IDENTITY();
 
 -- Use the retrieved ID for CropBedAttributes
 INSERT INTO CropBedAttributes (CropId, TimeToMaturity, RowSpacing, PlantSpacing, Notes)
 VALUES (
-    @NewCropId,
-    56, -- Time to maturity in days
+    @SpringOnionCropId,
+    60, -- Time to maturity in days
     10.00, -- Row spacing in cm
     3.00, -- Plant spacing in cm
     'Sow seeds 2-3cm apart in rows 10cm apart; no thinning needed. For early crops, start indoors in January.'
@@ -123,16 +123,16 @@ VALUES (
 
 INSERT INTO CropPropagationAttributes (CropId, PropagationTime, GerminationTime, PreferredTemperature, Notes)
 VALUES (
-    @NewCropId,
+    @SpringOnionCropId,
     28, -- Propagation time in days (approx. 4 weeks)
     14, -- Germination time in days
     20.00, -- Preferred germination temperature in °C
-    'For early crops, start indoors in January at 14°C. Direct sow from March to August.'
+    'For early crops, start indoors in February at 14°C. Direct sow from March to August.'
 );
 
 INSERT INTO Covers (CropId, CoverType, StartWeek, EndWeek, Notes)
 VALUES (
-    @NewCropId,
+    @SpringOnionCropId,
     'Fleece',
     10, -- Start week (early March)
     14, -- End week (early April)
@@ -170,22 +170,63 @@ SET @GardenBlock1Bed3 = (SELECT BedId FROM Beds WHERE BlockId = @GardenBlock1Id 
 SET @GardenBlock1Bed4 = (SELECT BedId FROM Beds WHERE BlockId = @GardenBlock1Id AND Position = 4);
 
 
-
+--Spring onions
 --Propagation tunnel
 
+--Total number of trays, what is the calculation?
+-- 4ft (120cm) bed 5ft(150cm) long.  Planting distances 10cm x 3cm 11 rows (leaving some space at the sides) x 450 columns = 4950 units
+--tray with 60 units.  4950 / 60 = 83 trays
+--multi sew 3 per unit 4950*3 = 19,800  Apparently 8 is possible
+
+--tray 1, add 82 more????
+
+--Calculate plating dates
+DECLARE @GrowingDays INT;
+DECLARE @BedPlantDate DATE;
+DECLARE @BedRemovalDate DATE;
+DECLARE @PropagationDays INT;
+DECLARE @PropPlantDate DATE;
+DECLARE @PropRemovalDate DATE;
+DECLARE @SeedsPerUnit INT;
+
+SET @SeedsPerUnit = 4; --Apparently 8 is possible
+SET @BedRemovalDate = '2025-March-01';
+SET @BedPlantDate = dateadd(dd, -@GrowingDays, @BedRemovalDate);
+SET @GrowingDays = (SELECT TimeToMaturity FROM CropBedAttributes WHERE CropId=@SpringOnionCropId);
+SET @PropagationDays = (SELECT PropagationTime FROM CropPropagationAttributes WHERE CropId=@SpringOnionCropId);
+SET @PropRemovalDate = DateAdd(dd,-1,@BedPlantDate);
+SET @PropPlantDate = DateAdd(dd,-@PropagationDays, @PropRemovalDate);
+
+--Propagation
 INSERT INTO ModuleTrays (AreaId, TrayTypeId, CropId, SeedsPerModule, PlantingDate, RemovalDate, BedCropId)
 VALUES
-(@AreaHeatedTableId, @ModuleTrayStandard60Id, @NewCropId, 1, '2024-02-01', '2024-02-21', @GardenBlock1Bed1); -- sprint onion
+(@AreaHeatedTableId, @ModuleTrayStandard60Id, @SpringOnionCropId, @SeedsPerUnit, @PropPlantDate, @PropRemovalDate, @GardenBlock1Bed1); -- spring onion
 
---Outdoor
+--Bed planting
 INSERT INTO BedCrops (BedId, CropId, PlantingDate, RemovalDate)
 VALUES
-(@GardenBlock1Bed1, @NewCropId, '2024-03-01', '2024-05-01'); -- spring onion in Bed 1
+(@GardenBlock1Bed1, @SpringOnionCropId, @BedPlantDate, @BedRemovalDate); -- spring onion in Bed 1
+
+--Second Planting, late spring (May)
+SET @BedRemovalDate = '2025-July-20';
+SET @BedPlantDate = dateadd(dd, -@GrowingDays, @BedRemovalDate);
+SET @GrowingDays = (SELECT TimeToMaturity FROM CropBedAttributes WHERE CropId=@SpringOnionCropId);
+SET @PropagationDays = (SELECT PropagationTime FROM CropPropagationAttributes WHERE CropId=@SpringOnionCropId);
+SET @PropRemovalDate = DateAdd(dd,-1,@BedPlantDate);
+SET @PropPlantDate = DateAdd(dd,-@PropagationDays, @PropRemovalDate);
+
+--Propagation
+INSERT INTO ModuleTrays (AreaId, TrayTypeId, CropId, SeedsPerModule, PlantingDate, RemovalDate, BedCropId)
+VALUES
+(@AreaHeatedTableId, @ModuleTrayStandard60Id, @SpringOnionCropId, @SeedsPerUnit, @PropPlantDate, @PropRemovalDate, @GardenBlock1Bed1); -- spring onion
+
+--Bed planting
+INSERT INTO BedCrops (BedId, CropId, PlantingDate, RemovalDate)
+VALUES
+(XXX, @SpringOnionCropId, @BedPlantDate, @BedRemovalDate); -- spring onion in Bed XXX
 
 
-
-
-
+--Lettuce mix.  Little Gem, Saragossa, Valmaine, Lollo Rossa and Bijou,
 
 
 
