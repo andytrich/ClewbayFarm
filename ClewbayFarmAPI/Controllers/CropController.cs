@@ -33,32 +33,32 @@ namespace ClewbayFarmAPI.Controllers
 
             return crop;
         }
-        public async Task<ActionResult<Crop>> CreateCrop(CropDto cropDto)
-        {
-            // Find the corresponding CropType
-            var cropType = await _context.CropTypes
-                .FirstOrDefaultAsync(ct => ct.TypeName == cropDto.Type);
+        //public async Task<ActionResult<Crop>> CreateCrop(CropDto cropDto)
+        //{
+        //    // Find the corresponding CropType
+        //    var cropType = await _context.CropTypes
+        //        .FirstOrDefaultAsync(ct => ct.TypeName == cropDto.Type);
 
-            if (cropType == null)
-            {
-                return BadRequest($"Crop type '{cropDto.Type}' not found.");
-            }
+        //    if (cropType == null)
+        //    {
+        //        return BadRequest($"Crop type '{cropDto.Type}' not found.");
+        //    }
 
-            // Map the DTO to the Crop entity
-            var crop = new Crop
-            {
-                CropTypeId = cropType.CropTypeId,
-                Variety = cropDto.Variety,
-                IsDirectSow = cropDto.IsDirectSow
-            };
+        //    // Map the DTO to the Crop entity
+        //    var crop = new Crop
+        //    {
+        //        CropTypeId = cropType.CropTypeId,
+        //        Variety = cropDto.Variety,
+        //        IsDirectSow = cropDto.IsDirectSow
+        //    };
 
-            // Add the crop to the database
-            _context.Crops.Add(crop);
-            await _context.SaveChangesAsync();
+        //    // Add the crop to the database
+        //    _context.Crops.Add(crop);
+        //    await _context.SaveChangesAsync();
 
-            // Return the created crop
-            return CreatedAtAction(nameof(GetCrop), new { id = crop.CropId }, crop);
-        }
+        //    // Return the created crop
+        //    return CreatedAtAction(nameof(GetCrop), new { id = crop.CropId }, crop);
+        //}
 
 
     }

@@ -26,6 +26,10 @@ var app = builder.Build();
 
 app.UseCors("AllowReactApp");
 
+//app.Urls.Add("http://0.0.0.0:5000");
+//app.Urls.Add("http://192.168.0.22:5000");
+//app.Urls.Add("http://localhost:5000");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
