@@ -4,6 +4,7 @@ import Navbar from "./components/NavBar";
 import BlocksPage from "./pages/BlocksPage";
 import JobsPage from "./pages/JobsPage";
 import GapsPage from "./pages/GapsPage";
+import MushroomPage from "./pages/MushroomPage";
 
 const App: React.FC = () => {
     return (
@@ -12,6 +13,7 @@ const App: React.FC = () => {
                 <Navbar />
                 <div className="flex-grow-1 p-3">
                     <Routes>
+                        <Route path="/mushrooms" element={<MushroomPage />} />
                         <Route path="/blocks" element={<BlocksPage />} />
                         <Route path="/jobs" element={<JobsPage />} />
                         <Route path="/gaps" element={<GapsPage />} />

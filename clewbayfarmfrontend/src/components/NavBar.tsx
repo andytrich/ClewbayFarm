@@ -6,6 +6,9 @@ const Navbar: React.FC = () => {
         <div className="d-flex flex-column bg-light vh-100 p-3" style={{ width: "250px" }}>
             <h2 className="text-center">Clewbay Farm</h2>
             <ul className="nav flex-column">
+            <li className="nav-item">
+                    <Link className="nav-link" to="/mushrooms">Mushrooms</Link>
+                </li>
                 <li className="nav-item">
                     <Link className="nav-link" to="/blocks">Blocks</Link>
                 </li>

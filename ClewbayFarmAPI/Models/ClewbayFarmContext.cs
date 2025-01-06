@@ -14,7 +14,7 @@ public partial class ClewbayFarmContext : DbContext
         : base(options)
     {
     }
-
+    public virtual DbSet<MushroomEnv> MushroomEnv { get; set; }
     public virtual DbSet<Bed> Beds { get; set; }
 
     public virtual DbSet<BedCrop> BedCrops { get; set; }
@@ -43,6 +43,16 @@ public partial class ClewbayFarmContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<MushroomEnv>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary key
+            entity.Property(e => e.Temperature).IsRequired();
+            entity.Property(e => e.Humidity).IsRequired();
+            entity.Property(e => e.CO2Level).IsRequired();
+            entity.Property(e => e.RecordedDateTime)
+                  .IsRequired()
+                  .HasDefaultValueSql("GETUTCDATE()"); // Default value
+        });
         modelBuilder.Entity<Bed>(entity =>
         {
             entity.HasKey(e => e.BedId);//.HasName("PK__Beds__A8A7104048B9B9C8");

@@ -1,12 +1,21 @@
 #include <Wire.h>
 #include <SensirionI2CScd4x.h>
 
+// I2C pins
+#define SDA_PIN 2
+#define SCL_PIN 15
+ 
 SensirionI2CScd4x scd4x;
-int FAN_PIN = 34;
+//int FAN_PIN = 34;
+int FAN_PIN = 16;        // Replace with valid output-capable pin
+
+// Correct GPIO pins for output
 bool FanIsOn = false;
-int HUMIDITY_PIN = 10;
+//int HUMIDITY_PIN = 10;
+int HUMIDITY_PIN = 17;   // Replace with valid output-capable pin
 bool HumidityIsOn = false;
-int HEATER_PIN = 9;
+//int HEATER_PIN = 9;
+int HEATER_PIN = 18;     // Replace with valid output-capable pin
 bool HeaterIsOn = false;
 
 void heaterOn() {
@@ -71,8 +80,8 @@ void setup() {
     delay(100);
   }
 
-  //Wire.begin(21, 18);  // SDA, SCL for ESP32
-  Wire.begin();
+//Wire.begin(SDA_PIN, SCL_PIN);
+ Wire.begin();
 
   uint16_t error;
   char errorMessage[256];
@@ -98,6 +107,16 @@ void setup() {
   } else {
     printSerialNumber(serial0, serial1, serial2);
   }
+  // // Perform Forced Recalibration (FRC) to 400 ppm
+  // uint16_t frcValue = 400; // Target CO2 ppm value for clean air
+  // scd4x.performForcedRecalibration(frcValue,error);
+
+  // if (error) {
+  //   Serial.print("Error during Forced Recalibration: ");
+  //   Serial.println(error);
+  // } else {
+  //   Serial.println("Forced Recalibration completed successfully!");
+  // }
 
   // Start Measurement
   error = scd4x.startPeriodicMeasurement();

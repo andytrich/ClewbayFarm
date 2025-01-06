@@ -1,5 +1,5 @@
-USE [ClewbayFarm]
-CREATE LOGIN ApiUser WITH PASSWORD = 'StrongPasswordHere';
+--USE [ClewBayFarm]
+CREATE LOGIN ApiUser WITH PASSWORD = 'ngjkkgfdjgGFYU&*(';
 GO
 /****** Object:  User [ApiUser]    Script Date: 05/12/2024 16:06:06 ******/
 CREATE USER [ApiUser] FOR LOGIN [ApiUser] WITH DEFAULT_SCHEMA=[dbo]

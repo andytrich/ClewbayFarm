@@ -5,14 +5,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<ClewbayFarmContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ClewBayFarmServer")));
 
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // Allow React dev server
+        policy.WithOrigins("http://localhost:3000", "https://white-wave-06016c20f.4.azurestaticapps.net") // Allow React dev server
               .AllowAnyHeader() // Allow any headers
               .AllowAnyMethod(); // Allow any HTTP methods
     });

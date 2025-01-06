@@ -1,6 +1,12 @@
 import axios from "axios";
 
-const BASE_URL = "https://localhost:7237/api"; // Replace with your backend URL
+//const BASE_URL = "https://localhost:7237/api"; // Replace with your backend URL
+const BASE_URL = "https://clewbayfarm.azurewebsites.net/api";
+
+export const getMushroomEnvironment = async () => {
+    const response = await axios.get(`${BASE_URL}/Mushroom`);
+    return response.data;
+}
 
 export const getAllBlocks = async () => {
     const response = await axios.get(`${BASE_URL}/Block/GetAllBlocks`);

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClewbayFarmAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace ClewbayFarmAPI.Controllers
 {
@@ -6,21 +8,12 @@ namespace ClewbayFarmAPI.Controllers
     [Route("api/[controller]")]
     public class MushroomController : Controller
     {
-        //        private static readonly string[] Summaries = new[]
-        //{
-        //            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        //        };
-        //        [HttpGet()]
-        //        public IEnumerable<WeatherForecast> Get()
-        //        {
-        //            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //            {
-        //                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-        //                TemperatureC = Random.Shared.Next(-20, 55),
-        //                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        //            })
-        //            .ToArray();
-        //        }
+        private readonly ClewbayFarmContext _context;
+
+        public MushroomController(ClewbayFarmContext context)
+        {
+            _context = context;
+        }
 
         public class SensorData
         {
@@ -29,14 +22,59 @@ namespace ClewbayFarmAPI.Controllers
             public int Co2Level { get; set; }
         }
 
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                // Retrieve all records from the MushroomEnv table
+                var allRecords = _context.MushroomEnv
+                    .OrderByDescending(m => m.RecordedDateTime) // Optional: order by date
+                    .ToList();
+
+                return Ok(allRecords); // Return the records as JSON
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, new { Message = "An error occurred while retrieving the data." });
+            }
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody] SensorData data)
         {
-            // Log or process the data
-            Console.WriteLine($"Temperature: {data.Temperature}, Humidity: {data.Humidity}, CO2 Level: {data.Co2Level}");
+            if (data == null)
+            {
+                return BadRequest(new { Message = "Invalid sensor data." });
+            }
 
-            // Return a response
-            return Ok(new { Message = "Data received successfully" });
+            try
+            {
+                // Create a new MushroomEnv entity
+                var mushroomEnv = new MushroomEnv
+                {
+                    Temperature = data.Temperature,
+                    Humidity = data.Humidity,
+                    CO2Level = data.Co2Level,
+                    RecordedDateTime = DateTime.UtcNow // Use UTC time for consistency
+                };
+
+                // Add the entity to the database context
+                _context.MushroomEnv.Add(mushroomEnv);
+
+                // Save changes to the database
+                _context.SaveChanges();
+
+                // Return a success response
+                return Ok(new { Message = "Data saved successfully" });
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a server error response
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, new { Message = "An error occurred while saving the data." });
+            }
         }
     }
 }
