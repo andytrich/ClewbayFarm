@@ -351,3 +351,5 @@ MigrationBackup/
 Arduino/MushroomAPICall/secret.h
 
 ClewbayFarmAPI/appsettings.json
+
+clewbayfarmfrontend/.env
